@@ -57,7 +57,7 @@ class MouvementAutomatique
     private $debit;
 
     /**
-     * @var \Compte
+     * @var Compte
      *
      * @ORM\ManyToOne(targetEntity="Compte")
      * @ORM\JoinColumns({

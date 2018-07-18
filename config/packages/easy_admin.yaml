@@ -1,4 +1,13 @@
 easy_admin:
+    design:
+        menu: [
+            { entity: 'Compte', icon: 'credit-card'},
+            { entity: 'Mouvement', icon: 'list'},
+            { entity: 'MouvementAutomatique', label: 'Mouvement Automatique', icon: 'magic' }]
+
+        templates:
+            layout: 'layout.html.twig'
+
     entities:
         # List the entity class name you want to manage
         - App\Entity\Compte

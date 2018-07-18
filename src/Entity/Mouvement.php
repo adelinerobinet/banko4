@@ -66,16 +66,26 @@ class Mouvement
      */
     private $compte;
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return bool|null
+     */
     public function getTraite(): ?bool
     {
         return $this->traite;
     }
 
+    /**
+     * @param bool|null $traite
+     * @return Mouvement
+     */
     public function setTraite(?bool $traite): self
     {
         $this->traite = $traite;
@@ -83,11 +93,18 @@ class Mouvement
         return $this;
     }
 
+    /**
+     * @return null|string
+     */
     public function getLibelle(): ?string
     {
         return $this->libelle;
     }
 
+    /**
+     * @param string $libelle
+     * @return Mouvement
+     */
     public function setLibelle(string $libelle): self
     {
         $this->libelle = $libelle;
@@ -95,11 +112,18 @@ class Mouvement
         return $this;
     }
 
+    /**
+     * @return \DateTimeInterface|null
+     */
     public function getDate(): ?\DateTimeInterface
     {
         return $this->date;
     }
 
+    /**
+     * @param \DateTimeInterface|null $date
+     * @return Mouvement
+     */
     public function setDate(?\DateTimeInterface $date): self
     {
         $this->date = $date;
@@ -107,11 +131,18 @@ class Mouvement
         return $this;
     }
 
+    /**
+     * @return null|string
+     */
     public function getCredit(): ?string
     {
         return $this->credit;
     }
 
+    /**
+     * @param null|string $credit
+     * @return Mouvement
+     */
     public function setCredit(?string $credit): self
     {
         $this->credit = $credit;
@@ -119,11 +150,18 @@ class Mouvement
         return $this;
     }
 
+    /**
+     * @return null|string
+     */
     public function getDebit(): ?string
     {
         return $this->debit;
     }
 
+    /**
+     * @param null|string $debit
+     * @return Mouvement
+     */
     public function setDebit(?string $debit): self
     {
         $this->debit = $debit;
@@ -131,17 +169,22 @@ class Mouvement
         return $this;
     }
 
+    /**
+     * @return Compte|null
+     */
     public function getCompte(): ?Compte
     {
         return $this->compte;
     }
 
+    /**
+     * @param Compte|null $compte
+     * @return Mouvement
+     */
     public function setCompte(?Compte $compte): self
     {
         $this->compte = $compte;
 
         return $this;
     }
-
-
 }

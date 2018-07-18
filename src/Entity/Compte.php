@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * Compte
  *
  * @ORM\Table(name="compte")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\CompteRepository")
  */
 class Compte
 {
@@ -42,21 +42,34 @@ class Compte
      */
     private $ordre;
 
+    /**
+     * @return null|string
+     */
     public function __toString()
     {
         return $this->getNom();
     }
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return null|string
+     */
     public function getNom(): ?string
     {
         return $this->nom;
     }
 
+    /**
+     * @param string $nom
+     * @return Compte
+     */
     public function setNom(string $nom): self
     {
         $this->nom = $nom;
@@ -64,11 +77,18 @@ class Compte
         return $this;
     }
 
+    /**
+     * @return null|string
+     */
     public function getSoldeInitial(): ?string
     {
         return $this->soldeInitial;
     }
 
+    /**
+     * @param string $soldeInitial
+     * @return Compte
+     */
     public function setSoldeInitial(string $soldeInitial): self
     {
         $this->soldeInitial = $soldeInitial;
@@ -76,17 +96,22 @@ class Compte
         return $this;
     }
 
+    /**
+     * @return int|null
+     */
     public function getOrdre(): ?int
     {
         return $this->ordre;
     }
 
+    /**
+     * @param int $ordre
+     * @return Compte
+     */
     public function setOrdre(int $ordre): self
     {
         $this->ordre = $ordre;
 
         return $this;
     }
-
-
 }

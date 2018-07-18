@@ -66,16 +66,26 @@ class MouvementAutomatique
      */
     private $compte;
 
+    /**
+     * @return int|null
+     */
     public function getId(): ?int
     {
         return $this->id;
     }
 
+    /**
+     * @return bool|null
+     */
     public function getActif(): ?bool
     {
         return $this->actif;
     }
 
+    /**
+     * @param bool|null $actif
+     * @return MouvementAutomatique
+     */
     public function setActif(?bool $actif): self
     {
         $this->actif = $actif;
@@ -83,11 +93,18 @@ class MouvementAutomatique
         return $this;
     }
 
+    /**
+     * @return null|string
+     */
     public function getLibelle(): ?string
     {
         return $this->libelle;
     }
 
+    /**
+     * @param string $libelle
+     * @return MouvementAutomatique
+     */
     public function setLibelle(string $libelle): self
     {
         $this->libelle = $libelle;
@@ -95,11 +112,18 @@ class MouvementAutomatique
         return $this;
     }
 
+    /**
+     * @return int|null
+     */
     public function getNumeroJour(): ?int
     {
         return $this->numeroJour;
     }
 
+    /**
+     * @param int $numeroJour
+     * @return MouvementAutomatique
+     */
     public function setNumeroJour(int $numeroJour): self
     {
         $this->numeroJour = $numeroJour;
@@ -107,11 +131,18 @@ class MouvementAutomatique
         return $this;
     }
 
+    /**
+     * @return null|string
+     */
     public function getCredit(): ?string
     {
         return $this->credit;
     }
 
+    /**
+     * @param string $credit
+     * @return MouvementAutomatique
+     */
     public function setCredit(string $credit): self
     {
         $this->credit = $credit;
@@ -119,11 +150,18 @@ class MouvementAutomatique
         return $this;
     }
 
+    /**
+     * @return null|string
+     */
     public function getDebit(): ?string
     {
         return $this->debit;
     }
 
+    /**
+     * @param string $debit
+     * @return MouvementAutomatique
+     */
     public function setDebit(string $debit): self
     {
         $this->debit = $debit;
@@ -131,11 +169,18 @@ class MouvementAutomatique
         return $this;
     }
 
+    /**
+     * @return Compte|null
+     */
     public function getCompte(): ?Compte
     {
         return $this->compte;
     }
 
+    /**
+     * @param Compte|null $compte
+     * @return MouvementAutomatique
+     */
     public function setCompte(?Compte $compte): self
     {
         $this->compte = $compte;

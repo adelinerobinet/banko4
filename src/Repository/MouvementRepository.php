@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Compte;
 use App\Entity\Mouvement;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
@@ -121,5 +122,25 @@ class MouvementRepository extends ServiceEntityRepository
     	if(count($mouvement_automatique) > 0)
             return true;
         return false;
+    }
+
+    /**
+     * Compte le nombre de mouvements selon un compte
+     *
+     * @param Compte $compte
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @return mixed
+     */
+    public function countMouvementByCompte(Compte $compte)
+    {
+        // Sinon, si on veut le nombre
+        $qb = $this->createQueryBuilder('m')
+            ->select('COUNT(m)')
+            ->andWhere('m.compte = :compte')
+            ->setParameter('compte', $compte);
+
+        $query = $qb->getQuery()->getSingleScalarResult();
+
+        return $query;
     }
 }

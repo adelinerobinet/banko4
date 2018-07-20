@@ -22,3 +22,19 @@ h2 {
     letter-spacing: -1px;
     text-align: center;
 }
+
+.pagination {
+    margin-top: 0;
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex; }
+.pagination .page-item .page-link {
+    color: #A08b8b;
+}
+.pagination .page-item.active .page-link,
+.pagination .page-item.active .page-link:focus,
+.pagination .page-item.active .page-link:hover {
+    color: #000000;
+    border-color: #E9ECEF;
+    background-color: #E9ECEF;
+}

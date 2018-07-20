@@ -12,6 +12,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Mouvement
 {
+    /** Items par page */
+    const PER_PAGE = 15;
+
     /**
      * @var int
      *

@@ -2,85 +2,87 @@
 
 namespace App\Controller;
 
+use App\Entity\Compte;
+use App\Entity\Mouvement;
 use App\Repository\CompteRepository;
 use App\Repository\MouvementRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
-/**
- * @Route("/compte")
- */
 class CompteController extends Controller
 {
     /**
-     * Liste les comptes
+     * @Route("/show/{compte}", name="show", methods="GET")
      *
-     * @Route("", name="home", methods="GET")
-     *
+     * @param Request $request
+     * @param Compte $compte
      * @param CompteRepository $compteRepository
-     * @return Response
+     * @param MouvementRepository $mouvementRepository
+     * @return \Symfony\Component\HttpFoundation\Response
+     * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function indexAction(CompteRepository $compteRepository)
+    public function show(Request $request, Compte $compte, CompteRepository $compteRepository, MouvementRepository $mouvementRepository)
     {
-        // Récupération de la liste des comptes
-        $comptes = $compteRepository->findAll();
+        // Récupération de tous les comptes pour l'affichage dans le menu
+        $comptes = $compteRepository->findBy([], ['ordre' => 'ASC']);
 
-        //Récupération du solde courant et prévisionnel de chaque compte
-        foreach ($comptes as $compte)
-        {
-            $compteCourant = $compteRepository->getMontantCompteCourant($compte->getId());
-            $soldeCourant[$compte->getId()] = round($compte->getSoldeInitial() + $compteCourant[0]['totalCreditTraite'] - $compteCourant[0]['totalDebitTraite'], 2);
+        //Appel du traitement de l'ajout des prelevements automatiques du mois en cours pour le compte à afficher
+        //$mouvementService->ajoutPrelevementAutomatique($compte);
 
-            $comptePrevisionnel = $compteRepository->getMontantComptePrevisionnel($compte->getId());
-            $soldePrevisionnel[$compte->getId()] = round($compte->getSoldeInitial() + $comptePrevisionnel[0]['totalCredit'] - $comptePrevisionnel[0]['totalDebit'], 2);
-        }
+        // On récupère la liste des mouvements par rapport au compte
+        $mouvements = $mouvementRepository->getMouvementsCompte($compte->getId(), Mouvement::PER_PAGE, $request->query->get('page', 1));
 
-        // Mais pour l'instant, on ne fait qu'appeler le template
-        return $this->render('Home/index.html.twig', [
+        //On récupère le solde courant (initial + totalCreditTraite - totalDebitTraite)
+        $compteCourant = $compteRepository->getMontantCompteCourant($compte->getId());
+        $soldeCourant = round($compte->getSoldeInitial() + $compteCourant[0]['totalCreditTraite'] - $compteCourant[0]['totalDebitTraite'], 2);
+
+        //On récupère le solde courant (initial + totalCredit - totalDebit)
+        $comptePrevisionnel = $compteRepository->getMontantComptePrevisionnel($compte->getId());
+        $soldePrevisionnel = round($compte->getSoldeInitial() + $comptePrevisionnel[0]['totalCredit'] - $comptePrevisionnel[0]['totalDebit'], 2) ;
+
+        // Récupération du nombre de mouvements
+        $countMouvements = $mouvementRepository->countMouvementByCompte($compte);
+
+        // Récupération des informations de la pagination
+        $pagination = [
+            'page' => $request->query->get('page', 1),
+            'pages_count' => max(ceil($countMouvements / Mouvement::PER_PAGE), 1),
+        ];
+
+        // Puis modifiez la ligne du render comme ceci, pour prendre en compte l'article :
+        return $this->render('Compte/show.html.twig', [
+            'compte' => $compte,
             'comptes' => $comptes,
             'solde_courant' => $soldeCourant,
-            'solde_previsionnel' => $soldePrevisionnel
-        ]);
-    }
-    
-    /**
-     * @Route("/voir/{id}/{page}", name="show", methods="GET")
-     */
-    public function show($id, $page, CompteRepository $compteRepository, MouvementRepository $mouvementRepository)
-    {
-      $compte = $compteRepository->find($id);
-      $comptes = $compteRepository->findBy([], ['ordre' => 'ASC']);
-
-      if($compte == null)
-      {
-          throw $this->createNotFoundException('Compte [id='.$id.'] inexistant.');
-      }
-
-      //Appel du traitement de l'ajout des prelevements automatiques du mois en cours pour le compte à afficher
-      //$mouvementService->ajoutPrelevementAutomatique($compte);
-
-      // On récupère la liste des mouvements par rapport au compte
-      //$liste_mouvements = $em->getRepository('App:Mouvement')->findByCompte($id);
-      $mouvements = $mouvementRepository->getMouvementsCompte($id, 15, $page);
-
-      //On récupère le solde courant (initial + totalCreditTraite - totalDebitTraite)
-      $compte_courant = $compteRepository->getMontantCompteCourant($id);
-      $solde_courant = round($compte->getSoldeInitial() + $compte_courant[0]['totalCreditTraite'] - $compte_courant[0]['totalDebitTraite'], 2);
-
-      //On récupère le solde courant (initial + totalCredit - totalDebit)
-      $compte_previsionnel = $compteRepository->getMontantComptePrevisionnel($id);
-      $solde_previsionnel = round($compte->getSoldeInitial() + $compte_previsionnel[0]['totalCredit'] - $compte_previsionnel[0]['totalDebit'], 2) ;
-
-      // Puis modifiez la ligne du render comme ceci, pour prendre en compte l'article :
-      return $this->render('Home/show.html.twig', [
-        'compte' => $compte,
-        'comptes' => $comptes,
-        'solde_courant' => $solde_courant,
-        'solde_previsionnel' => $solde_previsionnel,
-        'mouvements' => $mouvements,
-        'page' => $page,
-        'nombre_page' => ceil(count($mouvements)/15),
+            'solde_previsionnel' => $soldePrevisionnel,
+            'mouvements' => $mouvements,
+            'pagination' => $pagination,
       ]);
+    }
+
+    /**
+     * Suppression du mouvement
+     *
+     * @Route("/{id}/delete", name="mouvement_delete", methods="DELETE|GET")
+     *
+     * @param Mouvement $mouvement
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse
+     */
+    public function delete(Mouvement $mouvement)
+    {
+        /** @var Compte $compte */
+        $compte = $mouvement->getCompte();
+
+        if (is_object($mouvement)) {
+            $this->getDoctrine()->getManager()->remove($mouvement);
+            $this->getDoctrine()->getManager()->flush();
+
+            $this->addFlash('success', 'mouvement_success_delete');
+
+            return $this->redirect($this->get('router')->generate('show', ['compte' => $compte->getId()]));
+        }
+
+        $this->addFlash('danger', 'mouvement_error_delete');
     }
 }

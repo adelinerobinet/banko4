@@ -1,0 +1,22 @@
+# Globals
+project: Banko
+admin: Admin
+dashboard: Dashboard
+cancel: Annuler
+
+# Account
+account_list: Liste des comptes
+name: Nom
+current_balance: Solde Courant
+forecast_balance: Solde Prévisionnel
+display: Visualiser
+no_account_found: Aucun compte trouvé
+account: Compte
+treated: Traité
+title: Libellé
+date: Date
+credit: Crédit
+debit: Débit
+actions: Actions
+mouvement_success_delete: Le mouvement a été supprimé
+mouvement_error_delete: Impossible de supprimer le mouvement

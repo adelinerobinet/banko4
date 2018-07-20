@@ -2,16 +2,45 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Gestion des comptes{% endblock %}</title>
-        {% block stylesheets %}
-            <!-- CSS -->
-            <link rel="stylesheet" href="{{ asset('build/css/app.css') }}"/>
-        {% endblock %}
+        <title>{{ 'project'|trans }} - {% block title %}{% endblock %}</title>
+        <link rel="stylesheet" href="{{ asset('build/css/app.css') }}"/>
+        <script src="{{ asset('build/js/app.js') }}"></script>
     </head>
     <body>
-        {% block body %}{% endblock %}
+        <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
+            <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="{{ path('home') }}"><i class="fa fa-university"></i> {{ 'project'|trans }}</a>
+            <ul class="navbar-nav px-3">
+                <li class="nav-item text-nowrap">
+                    <a class="nav-link" href="{{ path('easyadmin') }}" target="_blank"><i class="fa fa-database"></i> {{ 'admin'|trans }}</a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="container-fluid">
+            <div class="row">
+                <nav class="col-md-2 d-none d-md-block bg-light sidebar">
+                    <div class="sidebar-sticky">
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link {% if 'home' in app.request.get('_route') %}active{% endif %}" href="{{ path('home') }}">
+                                    <i class="fa fa-home"></i>
+                                    {{ 'dashboard'|trans }} <span class="sr-only">(current)</span>
+                                </a>
+                            </li>
+                            {% for compte in comptes %}
+                                <li class="nav-item">
+                                    <a class="nav-link {% if 'show/' ~ compte.id in app.request.pathinfo %}active{% endif %}"  href="{{ path('show', {compte: compte.id, page: 1}) }}">
+                                        <i class="fa fa-credit-card"></i>
+                                        {{ compte.nom }}
+                                    </a>
+                                </li>
+                            {% endfor%}
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+            {% block body %}{% endblock %}
+        </div>
         {% block javascripts %}{% endblock %}
-        <!-- Javascript -->
-        <script src="{{ asset('build/js/app.js') }}"></script>
     </body>
 </html>

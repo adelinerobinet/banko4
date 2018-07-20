@@ -16,12 +16,14 @@ Encore
     // .addEntry('js/app', './assets/js/app.js')
     //.addStyleEntry('css/app', './assets/css/main.scss')
     .addStyleEntry('css/app', [
+        './assets/css/fonts.css',
         './assets/css/global.scss',
         './assets/css/main.css',
         './assets/css/theme.css'
     ])
     .addEntry('js/app', [
         './assets/js/popper.min.js',
+        './assets/js/jquery.js',
         './assets/js/bootstrap.js'
     ])
 
@@ -35,7 +37,7 @@ Encore
     .cleanupOutputBeforeBuild()
 
     // directory
-    .addPlugin(new CopyWebpackPlugin([{ from: './assets/img', to: 'img' }]))
+    .addPlugin(new CopyWebpackPlugin([{ from: './assets/fonts', to: 'fonts' }]))
 ;
 
 module.exports = Encore.getWebpackConfig();

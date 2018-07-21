@@ -20,3 +20,6 @@ debit: Débit
 actions: Actions
 mouvement_success_delete: Le mouvement a été supprimé
 mouvement_error_delete: Impossible de supprimer le mouvement
+stats: Statistiques
+current: Courant
+forecast: Prévisionnel

@@ -6,6 +6,7 @@ use App\Entity\Compte;
 use App\Entity\Mouvement;
 use App\Repository\CompteRepository;
 use App\Repository\MouvementRepository;
+use App\Service\MouvementService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,13 +23,13 @@ class CompteController extends Controller
      * @return \Symfony\Component\HttpFoundation\Response
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function show(Request $request, Compte $compte, CompteRepository $compteRepository, MouvementRepository $mouvementRepository)
+    public function show(Request $request, Compte $compte, CompteRepository $compteRepository, MouvementRepository $mouvementRepository, MouvementService $mouvementService)
     {
         // Récupération de tous les comptes pour l'affichage dans le menu
         $comptes = $compteRepository->findBy([], ['ordre' => 'ASC']);
 
         //Appel du traitement de l'ajout des prelevements automatiques du mois en cours pour le compte à afficher
-        //$mouvementService->ajoutPrelevementAutomatique($compte);
+        $mouvementService->ajoutPrelevementAutomatique($compte);
 
         // On récupère la liste des mouvements par rapport au compte
         $mouvements = $mouvementRepository->getMouvementsCompte($compte->getId(), Mouvement::PER_PAGE, $request->query->get('page', 1));

@@ -29,7 +29,7 @@ h2 {
     display: -ms-inline-flexbox;
     display: inline-flex; }
 .pagination .page-item .page-link {
-    color: #A08b8b;
+    color: #E9ECEF;
 }
 .pagination .page-item.active .page-link,
 .pagination .page-item.active .page-link:focus,

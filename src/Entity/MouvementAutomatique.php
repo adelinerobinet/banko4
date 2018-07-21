@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
  * MouvementAutomatique
  *
  * @ORM\Table(name="mouvement_automatique", indexes={@ORM\Index(name="IDX_9646EA2DF2C56620", columns={"compte_id"})})
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="App\Repository\MouvementAutomatiqueRepository")
  */
 class MouvementAutomatique
 {

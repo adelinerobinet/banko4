@@ -21,8 +21,8 @@
             {% endfor %}
         </div>
         <h1>{{ compte.nom }}</h1>
-        <h4 class="float-left text-success">Courant : {{ solde_courant }} €</h4>
-        <h4 class="float-right text-warning">Prévisionnel : {{ solde_previsionnel }} €</h4>
+        <h4 class="float-left text-success">{{ 'current'|trans }} : {{ solde_courant }} €</h4>
+        <h4 class="float-right text-warning">{{ 'forecast'|trans }} : {{ solde_previsionnel }} €</h4>
 
         <div class="table-responsive">
             <table class="table table-bordered table-sm">

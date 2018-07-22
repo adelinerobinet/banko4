@@ -39,12 +39,12 @@
                 <tbody>
                 {% for mouvement in mouvements %}
                     <tr>
-                        <td style="text-align: center;"><a href="#" id="traite{{ mouvement.id }}">{% if mouvement.traite == 1 %}Oui{% else %}Non{% endif %} </a></td>
+                        <td class="text-center"><a href="#" id="traite{{ mouvement.id }}">{% if mouvement.traite == 1 %}Oui{% else %}Non{% endif %} </a></td>
                         <td><a href="#" id="libelle{{ mouvement.id }}">{{ mouvement.libelle }}</a></td>
-                        <td style="text-align: center;"><a href="#" id="date{{ mouvement.id }}">{{ mouvement.date|date("d/m/Y") }}</a></td>
-                        <td style="text-align: center;"><a href="#" id="credit{{ mouvement.id }}">{{ mouvement.credit }}</a></td>
-                        <td style="text-align: center;"><a href="#" id="debit{{ mouvement.id }}">{{ mouvement.debit }}</a></td>
-                        <td style="text-align: center;"><a href="{{ path('mouvement_delete', { 'id': mouvement.id }) }}"><i class="fa fa-trash-alt"></i></a></td>
+                        <td class="text-center"><a href="#" id="date{{ mouvement.id }}">{{ mouvement.date|date("d/m/Y") }}</a></td>
+                        <td class="text-center"><a href="#" id="credit{{ mouvement.id }}">{{ mouvement.credit }}</a></td>
+                        <td class="text-center"><a href="#" id="debit{{ mouvement.id }}">{{ mouvement.debit }}</a></td>
+                        <td class="text-center"><a href="{{ path('mouvement_delete', { 'id': mouvement.id }) }}"><i class="fa fa-trash-alt"></i></a></td>
                     </tr>
                 {% else %}
                     <tr>Pas (encore !) de compte</tr>
@@ -55,15 +55,16 @@
         <div class="panel-footer">
             {{ include('Elements/_paginate.html.twig', {'pagination': pagination}) }}
         </div>
+
+        {#{{ render(controller('App\\Controller\\MouvementController::new', {'compte': compte})) }}#}
+
     </main>
 
-    {#{{ render(controller('BankoCompteBundle:Mouvement:new', {'compte_id': compte.id})) }} #}
-
    <script type="text/javascript">
-      function redirige(value) {
-        var url = '{{ path('show', {'compte': 'compte' , 'page': 1}) }}';
-        url = url.replace("compte.id", value);
-        document.location = url;
-      }
+      {#function redirige(value) {#}
+        {#var url = '{{ path('show', {'compte': 'compte' , 'page': 1}) }}';#}
+        {#url = url.replace("compte.id", value);#}
+        {#document.location = url;#}
+      {#}#}
   </script>
 {% endblock %}

@@ -4,86 +4,78 @@ namespace App\Controller;
 
 use App\Entity\Compte;
 use App\Entity\Mouvement;
+use App\Form\CompteType;
 use App\Repository\CompteRepository;
-use App\Repository\MouvementRepository;
+use App\Service\CompteService;
 use App\Service\MouvementService;
+use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Class CompteController
+ * @package App\Controller
+ *
+ *  @Route("/compte")
+ */
 class CompteController extends Controller
 {
     /**
-     * @Route("/show/{compte}", name="show", methods="GET")
+     * @Route("/{id}/edit", name="compte_edit", methods="GET|PUT")
      *
      * @param Request $request
      * @param Compte $compte
      * @param CompteRepository $compteRepository
-     * @param MouvementRepository $mouvementRepository
-     * @return \Symfony\Component\HttpFoundation\Response
-     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @param CompteService $compteService
+     * @param MouvementService $mouvementService
+     * @param EntityManagerInterface $em
+     * @param PaginatorInterface $paginator
+     * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function show(Request $request, Compte $compte, CompteRepository $compteRepository, MouvementRepository $mouvementRepository, MouvementService $mouvementService)
-    {
-        // Récupération de tous les comptes pour l'affichage dans le menu
+    public function edit(
+        Request $request,
+        Compte $compte,
+        CompteRepository $compteRepository,
+        CompteService $compteService,
+        MouvementService $mouvementService,
+        EntityManagerInterface $em,
+        PaginatorInterface $paginator
+    ) {
+        // TODO : A faire avec Twig - Récupération de tous les comptes pour l'affichage dans le menu
         $comptes = $compteRepository->findBy([], ['ordre' => 'ASC']);
 
-        //Appel du traitement de l'ajout des prelevements automatiques du mois en cours pour le compte à afficher
+        // Appel du traitement de l'ajout des prelevements automatiques du mois en cours pour le compte à afficher
         $mouvementService->ajoutPrelevementAutomatique($compte);
 
-        // On récupère la liste des mouvements par rapport au compte
-        $mouvements = $mouvementRepository->getMouvementsCompte($compte->getId(), Mouvement::PER_PAGE, $request->query->get('page', 1));
+        // On récupère le solde courant et prévisionnel
+        $solde = $compteService->getSolde($compte->getId());
 
-        //On récupère le solde courant (initial + totalCreditTraite - totalDebitTraite)
-        $compteCourant = $compteRepository->getMontantCompteCourant($compte->getId());
-        $soldeCourant = round($compte->getSoldeInitial() + $compteCourant[0]['totalCreditTraite'] - $compteCourant[0]['totalDebitTraite'], 2);
+        // Pagination
+        $mouvements = $compte->getMouvements();
+        $pagination = $paginator->paginate($mouvements, $request->query->getInt('page', 1), Mouvement::PER_PAGE);
 
-        //On récupère le solde courant (initial + totalCredit - totalDebit)
-        $comptePrevisionnel = $compteRepository->getMontantComptePrevisionnel($compte->getId());
-        $soldePrevisionnel = round($compte->getSoldeInitial() + $comptePrevisionnel[0]['totalCredit'] - $comptePrevisionnel[0]['totalDebit'], 2) ;
+        $form = $this->createForm(CompteType::class, $compte, [
+            'method' => 'PUT',
+            'pagination' => $pagination
+        ]);
 
-        // Récupération du nombre de mouvements
-        $countMouvements = $mouvementRepository->countMouvementByCompte($compte);
+        $form->handleRequest($request);
 
-        // Récupération des informations de la pagination
-        $pagination = [
-            'page' => $request->query->get('page', 1),
-            'pages_count' => max(ceil($countMouvements / Mouvement::PER_PAGE), 1),
-        ];
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em->flush();
 
-        // Puis modifiez la ligne du render comme ceci, pour prendre en compte l'article :
-        return $this->render('Compte/show.html.twig', [
-            'compte' => $compte,
-            'comptes' => $comptes,
-            'solde_courant' => $soldeCourant,
-            'solde_previsionnel' => $soldePrevisionnel,
-            'mouvements' => $mouvements,
-            'pagination' => $pagination,
-      ]);
-    }
+            $this->addFlash('success', 'compte_success_edit');
 
-    /**
-     * Suppression du mouvement
-     *
-     * @Route("/{id}/delete", name="mouvement_delete", methods="DELETE|GET")
-     *
-     * @param Mouvement $mouvement
-     * @return \Symfony\Component\HttpFoundation\RedirectResponse
-     */
-    public function delete(Mouvement $mouvement)
-    {
-        /** @var Compte $compte */
-        $compte = $mouvement->getCompte();
-
-        if (is_object($mouvement)) {
-            $this->getDoctrine()->getManager()->remove($mouvement);
-            $this->getDoctrine()->getManager()->flush();
-
-            $this->addFlash('success', 'mouvement_success_delete');
-
-            return $this->redirect($this->get('router')->generate('show', ['compte' => $compte->getId()]));
+            return $this->redirect($request->getUri());
         }
 
-        $this->addFlash('danger', 'mouvement_error_delete');
+        return $this->render('Compte/edit.html.twig', [
+            'comptes' => $comptes,
+            'solde' => $solde,
+            'pagination' => $pagination,
+            'form' => $form->createView(),
+      ]);
     }
 }

@@ -8,7 +8,7 @@
     </head>
     <body>
         <nav class="navbar navbar-dark fixed-top bg-dark flex-md-nowrap p-0 shadow">
-            <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="{{ path('home') }}"><i class="fa fa-university"></i> {{ 'project'|trans }}</a>
+            <a class="navbar-brand col-sm-3 col-md-2 mr-0" href="{{ path('dashboard') }}"><i class="fa fa-university"></i> {{ 'project'|trans }}</a>
             <ul class="navbar-nav px-3">
                 <li class="nav-item text-nowrap">
                     <a class="nav-link" href="{{ path('easyadmin') }}" target="_blank"><i class="fa fa-database"></i> {{ 'admin'|trans }}</a>
@@ -22,14 +22,14 @@
                     <div class="sidebar-sticky">
                         <ul class="nav flex-column">
                             <li class="nav-item">
-                                <a class="nav-link {% if 'home' in app.request.get('_route') %}active{% endif %}" href="{{ path('home') }}">
+                                <a class="nav-link {% if 'Dashboard' in app.request.get('_controller') %}active{% endif %}" href="{{ path('dashboard') }}">
                                     <i class="fa fa-home"></i>
                                     {{ 'dashboard'|trans }} <span class="sr-only">(current)</span>
                                 </a>
                             </li>
                             {% for compte in comptes %}
                                 <li class="nav-item">
-                                    <a class="nav-link {% if 'show/' ~ compte.id in app.request.pathinfo %}active{% endif %}"  href="{{ path('show', {compte: compte.id, page: 1}) }}">
+                                    <a class="nav-link {% if 'compte/' ~ compte.id in app.request.pathinfo %}active{% endif %}"  href="{{ path('compte_edit', {id: compte.id, page: 1}) }}">
                                         <i class="fa fa-credit-card"></i>
                                         {{ compte.nom }}
                                     </a>
@@ -43,4 +43,19 @@
         </div>
         {% block javascripts %}{% endblock %}
     </body>
+
+    {#<script>#}
+        {#{% for flash_message in app.session.flashBag.get('notice') %}#}
+            {#$.AppNotify("{{ flash_message }}", '', 'info');#}
+        {#{% endfor %}#}
+        {#{% for flash_message in app.session.flashBag.get('success') %}#}
+            {#$.AppNotify("{{ flash_message }}", '', 'success');#}
+        {#{% endfor %}#}
+        {#{% for flash_message in app.session.flashBag.get('warning') %}#}
+            {#$.AppNotify("{{ flash_message }}", '', 'warning');#}
+        {#{% endfor %}#}
+        {#{% for flash_message in app.session.flashBag.get('error') %}#}
+            {#$.AppNotify("{{ flash_message }}", '', 'danger');#}
+        {#{% endfor %}#}
+    {#</script>#}
 </html>

@@ -50,24 +50,30 @@ class Mouvement
      *
      * @ORM\Column(name="credit", type="string", length=255, nullable=true)
      */
-    private $credit = '0';
+    private $credit;
 
     /**
      * @var string|null
      *
      * @ORM\Column(name="debit", type="string", length=255, nullable=true)
      */
-    private $debit = '0';
+    private $debit;
 
     /**
      * @var Compte
      *
-     * @ORM\ManyToOne(targetEntity="Compte")
+     * @ORM\ManyToOne(targetEntity="Compte", inversedBy="mouvements")
      * @ORM\JoinColumns({
      *   @ORM\JoinColumn(name="compte_id", referencedColumnName="id")
      * })
      */
     private $compte;
+
+    public function __construct()
+    {
+        $this->credit = '0';
+        $this->debit = '0';
+    }
 
     /**
      * @return int|null

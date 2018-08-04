@@ -4,7 +4,7 @@
 
 {% block body %}
     <main role="main" class="col-md-10 ml-sm-auto col-lg-10 px-4">
-        <br>
+        <br />
         <h1>{{ 'account_list'|trans }}</h1>
         <div class="table-responsive">
             <table class="table table-bordered">
@@ -17,10 +17,10 @@
                 </thead>
                 <tbody>
                 {% for compte in comptes %}
-                    <tr style="cursor:pointer;" onclick="document.location='{{ path('show', {'compte': compte.id}) }}'" title="{{ 'display'|trans }}">
+                    <tr style="cursor:pointer;" onclick="document.location='{{ path('compte_edit', {'id': compte.id}) }}'" title="{{ 'display'|trans }}">
                         <td>{{ compte.nom }}</td>
-                        <td class="text-center">{{ solde_courant[compte.id] }} €</td>
-                        <td class="text-center">{{ solde_previsionnel[compte.id] }} €</td>
+                        <td class="text-center">{{ compte.solde_courant }} €</td>
+                        <td class="text-center">{{ compte.solde_previsionnel }} €</td>
                     </tr>
                 {% else %}
                     <tr>{{ 'no_account_found'|trans }}</tr>

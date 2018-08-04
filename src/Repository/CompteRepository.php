@@ -25,6 +25,19 @@ class CompteRepository extends ServiceEntityRepository
     }
 
     /**
+     * Récupération des comptes en tant que tableau
+     * @return array
+     */
+    public function findByAsArray()
+    {
+        $qb = $this->_em->createQueryBuilder()
+            ->select('c.id, c.nom, c.soldeInitial as solde_initial')
+            ->from('App:Compte', 'c')
+            ->orderBy('c.ordre', 'ASC');
+
+        return $qb->getQuery()->getArrayResult();
+    }
+    /**
      * Retourne le montant du compte courant passé en paramètre
      *
      * @param $compteId

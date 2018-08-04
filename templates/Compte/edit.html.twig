@@ -1,0 +1,133 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    Compte - {{ form.vars.value.nom }}
+{% endblock %}
+
+{% form_theme form _self %}
+
+{# On surcharge l'affichage du prototype pour aligner les champs des réponses #}
+{% block _app_compte_mouvements_entry_widget %}
+    <tr>
+        <td class="text-center">{{ form_widget(form.traite, { 'attr': { 'checked': 'checked' } }) }}</td>
+        <td class="text-center">{{ form_widget(form.libelle) }}</td>
+        <td class="text-center">{{ form_widget(form.date) }}</td>
+        <td class="text-center">{{ form_widget(form.credit, { 'attr': { 'value' : 0 } }) }}</td>
+        <td class="text-center">{{ form_widget(form.debit, { 'attr': { 'value' : 0 } }) }}</td>
+        <td class="text-center mouvement-delete">
+            <a href="#"><i class="fa fa-trash-alt"></i></a>
+        </td>
+    </tr>
+{% endblock %}
+
+{% block body %}
+    <main role="main" class="col-md-10 ml-sm-auto col-lg-10 px-4">
+        <br />
+
+        {{ form_start(form) }}
+            <h1>{{ form.vars.value.nom }}</h1>
+            <h4 class="float-left text-success">{{ 'current'|trans }} : {{ solde.courant }} €</h4>
+            <h4 class="float-right text-warning">{{ 'forecast'|trans }} : {{ solde.previsionnel }} €</h4>
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-sm">
+                    <thead class="thead-light">
+                        <tr>
+                            <th class="text-center">{{ 'treated'|trans }}</th>
+                            <th class="text-center">{{ 'title'|trans }}</th>
+                            <th class="text-center">{{ 'date'|trans }}</th>
+                            <th class="text-center">{{ 'credit'|trans }}</th>
+                            <th class="text-center">{{ 'debit'|trans }}</th>
+                            <th class="text-center">{{ 'actions'|trans }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for mouvement in form.mouvements %}
+                        <tr class="mouvements" data-prototype="{{ form_widget(form.mouvements.vars.prototype)|e }}">
+                            <td class="text-center">{{ form_widget(mouvement.traite) }}</td>
+                            <td class="text-center">{{ form_widget(mouvement.libelle) }}</td>
+                            <td class="text-center">{{ form_widget(mouvement.date) }}</td>
+                            <td class="text-center">{{ form_widget(mouvement.credit) }}</td>
+                            <td class="text-center">{{ form_widget(mouvement.debit) }}</td>
+                            <td class="text-center mouvement-delete">
+                                <a href="#"><i class="fa fa-trash-alt"></i></a>
+                            </td>
+                        </tr>
+                    {% else %}
+                        <tr>Pas (encore !) de mouvement</tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div class="panel-footer">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+
+            <div class="btn-group">
+                <button type="button" class="btn btn-outline-info add_mouvement_link"><i class="fa fa-plus"></i> Ajouter un mouvement</button>
+            </div>
+            <div class="btn-group">
+                <button id="save" type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Enregistrer</button>
+            </div>
+            <table class="table table-bordered table-sm margin" id="mouvements-new"></table>
+
+        {{ form_rest(form) }}
+        {{ form_end(form) }}
+    </main>
+
+    <script type="text/javascript">
+        let $collectionHolder;
+        const $addMouvementButton = $('.add_mouvement_link');
+
+        $(document).ready(function() {
+            // Get the ul that holds the collection of mouvements
+            $collectionHolder = $('tr.mouvements');
+
+            // Count the current form inputs we have (e.g. 2), use that as the new
+            // index when inserting a new item (e.g. 2)
+            $collectionHolder.data('index', $collectionHolder.find(':input').length);
+
+            $addMouvementButton.on('click', function(e) {
+                // On ajoute un nouveau mouvement
+                addMouvementForm($collectionHolder);
+            });
+
+            // Suppression de mouvements existants
+            $('.mouvement-delete').on('click', function(e) {
+                $(this).parent().remove();
+            });
+
+            // Suppression des nouveaux mouvements
+            $('#mouvements-new').on('click', 'td', function(e) {
+                if ($(this).hasClass('mouvement-delete')) {
+                    // On supprime le nouveau mouvement du formulaire
+                    $(this).parent().remove();
+                }
+            });
+        });
+
+        /**
+         * Ajoute un nouveau mouvement
+         *
+         * @param $collectionHolder
+         */
+        function addMouvementForm($collectionHolder) {
+            // Get the data-prototype explained earlier
+            const prototype = $collectionHolder.data('prototype');
+            // Get the new index
+            const index = $collectionHolder.data('index');
+
+            let newForm = prototype;
+
+            // Replace '__name__' in the prototype's HTML to
+            // instead be a number based on how many items we have
+            newForm = newForm.replace(/__name__/g, index);
+
+            // Increase the index with one for the next item
+            $collectionHolder.data('index', index + 1);
+
+            // Display the form in the page in an li, before the "Add a mouvement" link li
+            $('#mouvements-new').append(newForm);
+        }
+    </script>
+{% endblock %}

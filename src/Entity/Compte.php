@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -43,6 +44,21 @@ class Compte
     private $ordre;
 
     /**
+     * @ORM\OneToMany(targetEntity="Mouvement", mappedBy="compte", cascade={"persist"}, orphanRemoval=true)
+     * @ORM\JoinColumn(nullable=true)
+     * @ORM\OrderBy({"date" = "DESC"})
+     */
+    private $mouvements;
+
+    /**
+     * Compte constructor.
+     */
+    public function __construct()
+    {
+        $this->mouvements = new ArrayCollection();
+    }
+
+    /**
      * @return null|string
      */
     public function __toString()
@@ -68,7 +84,7 @@ class Compte
 
     /**
      * @param string $nom
-     * @return Compte
+     * @return $this
      */
     public function setNom(string $nom): self
     {
@@ -87,7 +103,7 @@ class Compte
 
     /**
      * @param string $soldeInitial
-     * @return Compte
+     * @return $this
      */
     public function setSoldeInitial(string $soldeInitial): self
     {
@@ -106,12 +122,60 @@ class Compte
 
     /**
      * @param int $ordre
-     * @return Compte
+     * @return $this
      */
     public function setOrdre(int $ordre): self
     {
         $this->ordre = $ordre;
 
         return $this;
+    }
+
+    /**
+     * Add mouvements
+     *
+     * @param Mouvement $mouvement
+     * @return $this
+     */
+    public function addMouvement(Mouvement $mouvement)
+    {
+        if (!$this->mouvements->contains($mouvement)) {
+            $mouvement->setCompte($this);
+            $this->mouvements->add($mouvement);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove mouvement
+     *
+     * @param Mouvement $mouvement
+     * @return $this
+     */
+    public function removeMouvement(Mouvement $mouvement)
+    {
+        $this->mouvements->removeElement($mouvement);
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMouvements()
+    {
+        return $this->mouvements;
+    }
+
+    /**
+     * @param ArrayCollection $mouvements
+     */
+    public function setMouvements(ArrayCollection $mouvements)
+    {
+        foreach ($mouvements as $mouvement) {
+            $mouvement->setCompte($this);
+        }
+        $this->mouvements = $mouvements;
     }
 }

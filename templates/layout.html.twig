@@ -62,7 +62,7 @@
 
                     <div id="header-logo">
                         {% block header_logo %}
-                            <a class="logo {{ easyadmin_config('site_name')|length > 14 ? 'logo-long' }}" title="Accueil" href="{{ path('home') }}" target="_blank">
+                            <a class="logo {{ easyadmin_config('site_name')|length > 14 ? 'logo-long' }}" title="Accueil" href="{{ path('dashboard') }}" target="_blank">
                                 <i class="fa fa-home"></i>
                             </a>
                         {% endblock header_logo %}

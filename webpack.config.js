@@ -13,18 +13,18 @@ Encore
     // .enableVersioning(Encore.isProduction())
 
     // uncomment to define the assets of the project
-    // .addEntry('js/app', './assets/js/app.js')
-    //.addStyleEntry('css/app', './assets/css/main.scss')
+    .addEntry('js/app', [
+        './assets/js/popper.min.js',
+        './assets/js/jquery.js',
+        './assets/js/bootstrap.js',
+        './assets/js/notify.js',
+        './assets/js/main.js'
+    ])
     .addStyleEntry('css/app', [
         './assets/css/fonts.css',
         './assets/css/global.scss',
         './assets/css/main.css',
         './assets/css/theme.css'
-    ])
-    .addEntry('js/app', [
-        './assets/js/popper.min.js',
-        './assets/js/jquery.js',
-        './assets/js/bootstrap.js'
     ])
 
     // uncomment if you use Sass/SCSS files

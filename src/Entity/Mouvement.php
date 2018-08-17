@@ -13,7 +13,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Mouvement
 {
     /** Items par page */
-    const PER_PAGE = 15;
+    const PER_PAGE = 25;
 
     /**
      * @var int
@@ -73,6 +73,7 @@ class Mouvement
     {
         $this->credit = '0';
         $this->debit = '0';
+        $this->date = new \DateTime('now');
     }
 
     /**

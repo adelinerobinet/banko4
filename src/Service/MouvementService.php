@@ -111,6 +111,9 @@ class MouvementService
      */
     private function getMouvementCompte($compte_id, $libelle, $numero_jour, $credit, $debit, $mois, $annee_suivante)
     {
+        // Initialisation
+        $date = null;
+
         if ($mois == date('m')) {
             $date = date('Y') . '-' . date('m') . '-' . $numero_jour;
         }
@@ -130,8 +133,13 @@ class MouvementService
             $date = (date('Y') . '-01-' . $numero_jour);
         }
 
-        $mouvement_automatique = $this->mouvementRepository->getMouvementAutomatiqueCompte($compte_id,
-            $libelle, $date, $credit, $debit);
+        $mouvement_automatique = $this->mouvementRepository->getMouvementAutomatiqueCompte(
+            $compte_id,
+            $libelle,
+            $date,
+            $credit,
+            $debit
+        );
 
         if (count($mouvement_automatique) > 0) {
             return true;

@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\MouvementAutomatique;
-use Doctrine\ORM\Query;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -27,15 +26,17 @@ class MouvementAutomatiqueRepository extends ServiceEntityRepository
    /**
     * Retourne les mouvements automatiques d'un compte
     *
+    * @param $id : Id du compte
     * @return array
     */
-    public function getMouvementAutomatiqueActifCompte($compte_id) 
+    public function getMouvementAutomatiqueActifCompte($id)
     {
     	$qb = $this->_em->createQueryBuilder()
-                ->select("ma")
-    		->from("App:MouvementAutomatique", "ma")
-    		->where("ma.compte = '" . $compte_id . "'")
-                ->andWhere("ma.actif = 1");
+            ->select('ma')
+    		->from('App:MouvementAutomatique', 'ma')
+    		->where('ma.compte = :compte')
+            ->setParameter('compte', $id)
+            ->andWhere('ma.actif = 1');
 
         return $qb->getQuery()->getArrayResult();
     }  

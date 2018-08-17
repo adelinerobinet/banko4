@@ -5,8 +5,6 @@ namespace App\Repository;
 use App\Entity\Compte;
 use App\Entity\Mouvement;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Query;
-use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -29,21 +27,47 @@ class MouvementRepository extends ServiceEntityRepository
     /**
      * Retourne le mouvement s'il existe déjà pour ce compte
      *
-     * @return array
-     * @access public
+     * @param $id : Id du compte
+     * @param $libelle
+     * @param $date
+     * @param $credit
+     * @param $debit
+     * @return mixed
      */
-    public function getMouvementAutomatiqueCompte($compte_id, $libelle, $date, $credit, $debit)
+    public function getMouvementAutomatiqueCompte($id, $libelle, $date, $credit, $debit)
     {
         $query = $this->_em->createQueryBuilder()
-            ->select("m")
-            ->from("App:Mouvement", "m")
-            ->where("m.compte = '" . $compte_id . "'")
-            ->andWhere("m.libelle = '" . $libelle . "'")
-            ->andWhere("m.date = '" . $date . "'")
-            ->andWhere("m.credit = '" . $credit . "'")
-            ->andWhere("m.debit = '" . $debit . "'");
+            ->select('m')
+            ->from('App:Mouvement', 'm')
+            ->where('m.compte = :compte')
+            ->andWhere('m.libelle = :libelle')
+            ->andWhere('m.date = :date')
+            ->andWhere('m.credit = :credit')
+            ->andWhere('m.debit = :debit')
+            ->setParameter('compte', $id)
+            ->setParameter('libelle', $libelle)
+            ->setParameter('date', $date)
+            ->setParameter('credit', $credit)
+            ->setParameter('debit', $debit);
 
-        return $query->getQuery()->getResult(Query::HYDRATE_ARRAY);
+        return $query->getQuery()->getArrayResult();
+    }
+
+    /**
+     * Récupération des derniers mouvements du compte
+     *
+     * @param Compte $compte
+     * @return array
+     */
+    public function getMouvements(Compte $compte)
+    {
+        $qb = $this->createQueryBuilder('m')
+            ->where('m.compte = :compte')
+            ->setParameter('compte', $compte)
+            ->orderBy('m.date', 'DESC')
+            ->setMaxResults(Mouvement::PER_PAGE);
+
+        return $qb->getQuery()->getResult();
     }
 
     /**

@@ -4,7 +4,6 @@ namespace App\Repository;
 
 use App\Entity\Compte;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Query;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -37,36 +36,39 @@ class CompteRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getArrayResult();
     }
+
     /**
      * Retourne le montant du compte courant passé en paramètre
      *
-     * @param $compteId
+     * @param $id : Id du compte
      * @return mixed
      */
-    public function getMontantCompteCourant($compteId)
+    public function getMontantCompteCourant($id)
     {
         $qb = $this->_em->createQueryBuilder()
             ->select('SUM(m.credit) AS totalCreditTraite, SUM(m.debit) AS totalDebitTraite')
-            ->from("App:Mouvement", "m")
-            ->where("m.compte = '" . $compteId . "'")
+            ->from('App:Mouvement', 'm')
+            ->where('m.compte = :compte')
+            ->setParameter('compte', $id)
             ->andWhere('m.traite = 1');
 
-        return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
+        return $qb->getQuery()->getArrayResult();
     }
 
     /**
      * Retourne le montant du compte prévisionnel
      *
-     * @param $compteId
+     * @param $id : Id du Compte
      * @return mixed
      */
-    public function getMontantComptePrevisionnel($compteId)
+    public function getMontantComptePrevisionnel($id)
     {
         $qb = $this->_em->createQueryBuilder()
             ->select('SUM(m.credit) AS totalCredit, SUM(m.debit) AS totalDebit')
-            ->from("App:Mouvement", "m")
-            ->where("m.compte = '" . $compteId . "'");
+            ->from('App:Mouvement', 'm')
+            ->where('m.compte = :compte')
+            ->setParameter('compte', $id);
 
-        return $qb->getQuery()->getResult(Query::HYDRATE_ARRAY);
+        return $qb->getQuery()->getArrayResult();
     }
 }

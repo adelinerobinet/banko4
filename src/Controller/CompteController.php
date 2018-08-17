@@ -3,13 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Compte;
-use App\Entity\Mouvement;
 use App\Form\CompteType;
-use App\Repository\CompteRepository;
+use App\Repository\MouvementRepository;
 use App\Service\CompteService;
 use App\Service\MouvementService;
 use Doctrine\ORM\EntityManagerInterface;
-use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -27,38 +25,32 @@ class CompteController extends Controller
      *
      * @param Request $request
      * @param Compte $compte
-     * @param CompteRepository $compteRepository
+     * @param MouvementRepository $mvtRepository,
      * @param CompteService $compteService
      * @param MouvementService $mouvementService
      * @param EntityManagerInterface $em
-     * @param PaginatorInterface $paginator
      * @return \Symfony\Component\HttpFoundation\RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
     public function edit(
         Request $request,
         Compte $compte,
-        CompteRepository $compteRepository,
+        MouvementRepository $mvtRepository,
         CompteService $compteService,
         MouvementService $mouvementService,
-        EntityManagerInterface $em,
-        PaginatorInterface $paginator
+        EntityManagerInterface $em
     ) {
-        // TODO : A faire avec Twig - Récupération de tous les comptes pour l'affichage dans le menu
-        $comptes = $compteRepository->findBy([], ['ordre' => 'ASC']);
-
         // Appel du traitement de l'ajout des prelevements automatiques du mois en cours pour le compte à afficher
         $mouvementService->ajoutPrelevementAutomatique($compte);
 
         // On récupère le solde courant et prévisionnel
         $solde = $compteService->getSolde($compte->getId());
 
-        // Pagination
-        $mouvements = $compte->getMouvements();
-        $pagination = $paginator->paginate($mouvements, $request->query->getInt('page', 1), Mouvement::PER_PAGE);
+        // Récupération des derniers mouvements du compte
+        $mouvements = $mvtRepository->getMouvements($compte);
 
         $form = $this->createForm(CompteType::class, $compte, [
             'method' => 'PUT',
-            'pagination' => $pagination
+            'mouvements' => $mouvements
         ]);
 
         $form->handleRequest($request);
@@ -72,9 +64,7 @@ class CompteController extends Controller
         }
 
         return $this->render('Compte/edit.html.twig', [
-            'comptes' => $comptes,
             'solde' => $solde,
-            'pagination' => $pagination,
             'form' => $form->createView(),
       ]);
     }

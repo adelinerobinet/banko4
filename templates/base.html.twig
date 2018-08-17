@@ -27,7 +27,7 @@
                                     {{ 'dashboard'|trans }} <span class="sr-only">(current)</span>
                                 </a>
                             </li>
-                            {% for compte in comptes %}
+                            {% for compte in comptes() %}
                                 <li class="nav-item">
                                     <a class="nav-link {% if 'compte/' ~ compte.id in app.request.pathinfo %}active{% endif %}"  href="{{ path('compte_edit', {id: compte.id, page: 1}) }}">
                                         <i class="fa fa-credit-card"></i>

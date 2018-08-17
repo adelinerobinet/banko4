@@ -25,19 +25,19 @@ class MouvementType extends AbstractType
     {
         $builder
             ->add('traite', CheckboxType::class, [
-                'required' => false,
+                'required' => false
             ])
             ->add('libelle', TextType::class, [
                 'attr' => ['placeholder' => 'Libellé']
             ])
             ->add('date', DateType::class, [
-                'widget' => 'single_text',
+                'widget' => 'single_text'
             ])
             ->add('credit', NumberType::class, [
-                'required' => false,
+                'required' => false
             ])
             ->add('debit', NumberType::class, [
-                'required' => false,
+                'required' => false
             ])
         ;
     }

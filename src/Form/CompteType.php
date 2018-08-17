@@ -3,8 +3,10 @@
 namespace App\Form;
 
 use App\Entity\Compte;
+use App\Repository\CompteRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -27,7 +29,7 @@ class CompteType extends AbstractType
                 'allow_add' => true,
                 'allow_delete' => true,
                 'by_reference' => false,
-                'data' => $options['pagination'],
+                'data' => $options['mouvements'],
             ]);
     }
 
@@ -38,7 +40,7 @@ class CompteType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Compte::class,
-            'pagination' => null
+            'mouvements' => null
         ]);
     }
 

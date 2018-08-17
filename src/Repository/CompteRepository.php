@@ -40,16 +40,16 @@ class CompteRepository extends ServiceEntityRepository
     /**
      * Retourne le montant du compte courant passé en paramètre
      *
-     * @param $id : Id du compte
+     * @param Compte $compte
      * @return mixed
      */
-    public function getMontantCompteCourant($id)
+    public function getMontantCompteCourant($compte)
     {
         $qb = $this->_em->createQueryBuilder()
             ->select('SUM(m.credit) AS totalCreditTraite, SUM(m.debit) AS totalDebitTraite')
             ->from('App:Mouvement', 'm')
             ->where('m.compte = :compte')
-            ->setParameter('compte', $id)
+            ->setParameter('compte', $compte)
             ->andWhere('m.traite = 1');
 
         return $qb->getQuery()->getArrayResult();
@@ -58,16 +58,16 @@ class CompteRepository extends ServiceEntityRepository
     /**
      * Retourne le montant du compte prévisionnel
      *
-     * @param $id : Id du Compte
+     * @param Compte $compte
      * @return mixed
      */
-    public function getMontantComptePrevisionnel($id)
+    public function getMontantComptePrevisionnel($compte)
     {
         $qb = $this->_em->createQueryBuilder()
             ->select('SUM(m.credit) AS totalCredit, SUM(m.debit) AS totalDebit')
             ->from('App:Mouvement', 'm')
             ->where('m.compte = :compte')
-            ->setParameter('compte', $id);
+            ->setParameter('compte', $compte);
 
         return $qb->getQuery()->getArrayResult();
     }

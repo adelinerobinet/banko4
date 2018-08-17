@@ -45,11 +45,11 @@ class CompteService
         $compte = $this->compteRepository->find($id);
 
         // Récupération du solde courant
-        $compteCourant = $this->compteRepository->getMontantCompteCourant($id);
+        $compteCourant = $this->compteRepository->getMontantCompteCourant($compte);
         $data['courant'] = round($compte->getSoldeInitial() + $compteCourant[0]['totalCreditTraite'] - $compteCourant[0]['totalDebitTraite'],2);
 
         // Récupération du solde prévisionnel
-        $comptePrevisionnel = $this->compteRepository->getMontantComptePrevisionnel($id);
+        $comptePrevisionnel = $this->compteRepository->getMontantComptePrevisionnel($compte);
         $data['previsionnel'] = round($compte->getSoldeInitial() + $comptePrevisionnel[0]['totalCredit'] - $comptePrevisionnel[0]['totalDebit'],2);
 
         return $data;

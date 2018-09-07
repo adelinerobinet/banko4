@@ -6,8 +6,11 @@ use App\Entity\Compte;
 use App\Entity\Mouvement;
 use App\Form\CompteType;
 use App\Form\MouvementType;
+use App\Service\CompteService;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
@@ -74,6 +77,40 @@ class MouvementController extends Controller
             'mouvement' => $mouvement,
             'form' => $form->createView(),
         ]);
+    }
+
+    /**
+     * Modification du champ traite d'un mouvement
+     *
+     * @Route("/update-traite", name="mouvement_update_traite")
+     *
+     * @param Request $request
+     * @param CompteService $compteService
+     * @return JsonResponse
+     * @throws \Doctrine\ORM\ORMException
+     * @throws \Doctrine\ORM\OptimisticLockException
+     */
+    public function updateTraite(Request $request, CompteService $compteService)
+    {
+        /** @var EntityManager $em */
+        $em = $this->getDoctrine()->getManager();
+
+        // Récupération des informations à mettre à jour
+        $id = intval($request->query->get('id'));
+        $newValue = $request->query->get('newValue');
+        $traite = filter_var($newValue, FILTER_VALIDATE_BOOLEAN);
+
+        /** @var Mouvement $mouvement */
+        $mouvement = $em->getRepository('App:Mouvement')->find($id);
+
+        // Mise à jour du champ traite
+        $mouvement->setTraite($traite);
+        $em->flush();
+
+        // On récupère le solde courant et prévisionnel
+        $solde = $compteService->getSolde($mouvement->getCompte()->getId());
+
+        return new JsonResponse($solde, 200);
     }
 
     /**

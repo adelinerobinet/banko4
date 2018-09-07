@@ -10,11 +10,10 @@
         <br/>
 
         <h1>{{ compte.nom }}</h1>
-        <h4 class="float-left text-success">{{ 'current'|trans }} : {{ solde.courant }} €</h4>
-        <h4 class="float-right text-warning">{{ 'forecast'|trans }} : {{ solde.previsionnel }} €</h4>
+        <h4 class="float-left text-success">{{ 'current'|trans }} : <span id="courant" >{{ solde.courant }}</span> €</h4>
+        <h4 class="float-right text-warning">{{ 'forecast'|trans }} : <span id="previsionnel">{{ solde.previsionnel }}</span> €</h4>
 
-        <div class="table-responsive">
-            <p>
+        <div id="main" class="table-responsive">
             {{ render(controller('App\\Controller\\MouvementController::new', {'id': compte.id})) }}
 
             <table class="table table-bordered table-sm">
@@ -30,8 +29,11 @@
                 </thead>
                 <tbody>
                 {% for mouvement in pagination %}
-                    <tr class="d-flex mouvements">
-                        <td class="col-1 text-center">{% if mouvement.traite == 1 %}Oui{% else %}Non{% endif %}</td>
+                    <tr class="d-flex mouvements" data-id="{{ mouvement.id }}">
+                        <td id="traite" class="col-1 text-center">
+                            <label for="traite"></label>
+                            <input type="checkbox" {% if mouvement.traite == 1 %}checked{% endif %}>
+                        </td>
                         <td class="col-4">{{ mouvement.libelle }}</td>
                         <td class="col-2 text-center">{{ mouvement.date|date("d/m/Y") }}</td>
                         <td class="col-2 text-center">{{ mouvement.credit }}</td>
@@ -98,6 +100,27 @@
                         $('.thead').addClass('d-none');
                     }
                 }
+            });
+
+            $('#traite input[type="checkbox"]').change(function() {
+                const newValue = $(this).is(":checked");
+                const oldValue = !newValue;
+                const id = $(this).closest('tr').data('id');
+
+                const url = "{{ path('mouvement_update_traite', { action: 'updateTraite', entity: 'mouvement' })|raw }}"
+                    + "&id=" + id.toString()
+                    + "&newValue=" + newValue.toString();
+
+                const request = $.ajax({ type: "POST", url: url, data: {} });
+
+                request.done(function(result) {
+                    // On met à jour le solde courant et prévisionnel
+                    $("#courant").html(result.courant);
+                    $("#previsionnel").html(result.previsionnel);
+                });
+                request.fail(function() {
+                    $(this).attr("checked", oldValue);
+                });
             });
         });
 

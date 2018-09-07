@@ -2,10 +2,10 @@
     <div class="d-flex mouvements" data-prototype="
         <tr class='d-flex'>
             <td class='col-1 text-center'>{{ form_widget(form.mouvements.vars.prototype.traite, { 'attr': { 'checked': 'checked' } }) | e }}</td>
-            <td class='col-4 text-center'>{{ form_widget(form.mouvements.vars.prototype.libelle, { 'attr': { 'style': 'width:350px' } }) | e }}</td>
-            <td class='col-2 text-center'>{{ form_widget(form.mouvements.vars.prototype.date) | e }}</td>
-            <td class='col-2 text-center'>{{ form_widget(form.mouvements.vars.prototype.credit, { 'attr': { 'value' : 0 } }) | e }}</td>
-            <td class='col-2 text-center'>{{ form_widget(form.mouvements.vars.prototype.debit, { 'attr': { 'value' : 0 } }) | e }}</td>
+            <td class='col-4 text-center'>{{ form_widget(form.mouvements.vars.prototype.libelle, { 'attr': { 'style': 'width:250px' } }) | e }}</td>
+            <td class='col-2 text-center'>{{ form_widget(form.mouvements.vars.prototype.date, { 'attr': { 'style': 'width:150px' } }) | e }}</td>
+            <td class='col-2 text-center'>{{ form_widget(form.mouvements.vars.prototype.credit, { 'attr': { 'value' : 0, 'style': 'width:70px'} }) | e }}</td>
+            <td class='col-2 text-center'>{{ form_widget(form.mouvements.vars.prototype.debit, { 'attr': { 'value' : 0, 'style': 'width:70px' } }) | e }}</td>
             <td class='col-1 text-center mouvement-delete'>
                 <a href='#'><i class='fa fa-trash-alt'></i></a>
             </td>

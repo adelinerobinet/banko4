@@ -28,20 +28,17 @@ class MouvementType extends AbstractType
                 'required' => false
             ])
             ->add('libelle', TextType::class, [
-                'attr' => ['placeholder' => 'Libellé', 'style' => 'width:350px'],
+                'attr' => ['placeholder' => 'Libellé']
 
             ])
             ->add('date', DateType::class, [
-                'widget' => 'single_text',
-                //'attr' => ['style' => 'width:350px']
+                'widget' => 'single_text'
             ])
             ->add('credit', NumberType::class, [
-                'required' => false,
-                //'attr' => ['style' => 'width:100px']
+                'required' => false
             ])
             ->add('debit', NumberType::class, [
-                'required' => false,
-                //'attr' => ['style' => 'width:100px']
+                'required' => false
             ])
         ;
     }

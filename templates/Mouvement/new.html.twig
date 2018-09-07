@@ -1,0 +1,39 @@
+{{ form_start(form, {'action': path('mouvement_new', {'id': form.vars.value.id}), 'method': 'POST'}) }}
+    <div class="d-flex mouvements" data-prototype="
+        <tr class='d-flex'>
+            <td class='col-1 text-center'>{{ form_widget(form.mouvements.vars.prototype.traite, { 'attr': { 'checked': 'checked' } }) | e }}</td>
+            <td class='col-4 text-center'>{{ form_widget(form.mouvements.vars.prototype.libelle, { 'attr': { 'style': 'width:350px' } }) | e }}</td>
+            <td class='col-2 text-center'>{{ form_widget(form.mouvements.vars.prototype.date) | e }}</td>
+            <td class='col-2 text-center'>{{ form_widget(form.mouvements.vars.prototype.credit, { 'attr': { 'value' : 0 } }) | e }}</td>
+            <td class='col-2 text-center'>{{ form_widget(form.mouvements.vars.prototype.debit, { 'attr': { 'value' : 0 } }) | e }}</td>
+            <td class='col-1 text-center mouvement-delete'>
+                <a href='#'><i class='fa fa-trash-alt'></i></a>
+            </td>
+        </tr>
+    ">
+    </div>
+    <div class="btn-group">
+        <button type="button" class="btn btn-outline-info add_mouvement_link"><i class="fa fa-plus"></i> Ajouter
+            un mouvement
+        </button>
+    </div>
+
+    <div class="btn-group">
+        <button id="save" type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Enregistrer</button>
+    </div>
+    <table class="table table-bordered table-sm margin" id="mouvements-new">
+        <thead class="thead d-none">
+        <tr class="d-flex">
+            <th class="col-1 text-center">{{ 'treated'|trans }}</th>
+            <th class="col-4 text-center">{{ 'title'|trans }}</th>
+            <th class="col-2 text-center">{{ 'date'|trans }}</th>
+            <th class="col-2 text-center">{{ 'credit'|trans }}</th>
+            <th class="col-2 text-center">{{ 'debit'|trans }}</th>
+            <th class="col-1 text-center">{{ 'actions'|trans }}</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    {{ form_widget(form._token) }}
+{{ form_end(form, {'render_rest': false}) }}

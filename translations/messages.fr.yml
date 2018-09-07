@@ -24,3 +24,4 @@ stats: Statistiques
 current: Courant
 forecast: Prévisionnel
 compte_success_edit: Le compte a été modifié
+compte_error_edit: Le compte n'a pas pu être modifié

@@ -69,6 +69,14 @@ class Mouvement
      */
     private $compte;
 
+    /**
+     * @return null|string
+     */
+    public function __toString()
+    {
+        return $this->getLibelle();
+    }
+
     public function __construct()
     {
         $this->credit = '0';

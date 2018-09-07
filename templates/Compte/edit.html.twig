@@ -1,80 +1,44 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    Compte - {{ form.vars.value.nom }}
-{% endblock %}
-
-{% form_theme form _self %}
-
-{# On surcharge l'affichage du prototype pour aligner les champs des réponses #}
-{% block _app_compte_mouvements_entry_widget %}
-    <tr>
-        <td class="text-center">{{ form_widget(form.traite, { 'attr': { 'checked': 'checked' } }) }}</td>
-        <td class="text-center">{{ form_widget(form.libelle) }}</td>
-        <td class="text-center">{{ form_widget(form.date) }}</td>
-        <td class="text-center">{{ form_widget(form.credit, { 'attr': { 'value' : 0 } }) }}</td>
-        <td class="text-center">{{ form_widget(form.debit, { 'attr': { 'value' : 0 } }) }}</td>
-        <td class="text-center mouvement-delete">
-            <a href="#"><i class="fa fa-trash-alt"></i></a>
-        </td>
-    </tr>
+    Compte - {{ compte.nom }}
 {% endblock %}
 
 {% block body %}
     <main role="main" class="col-md-10 ml-sm-auto col-lg-10 px-4">
+        <input type="hidden" id="count" value="{{ count_mouvement }}" />
         <br/>
 
-        {{ form_start(form) }}
-        <h1>{{ form.vars.value.nom }}</h1>
+        <h1>{{ compte.nom }}</h1>
         <h4 class="float-left text-success">{{ 'current'|trans }} : {{ solde.courant }} €</h4>
         <h4 class="float-right text-warning">{{ 'forecast'|trans }} : {{ solde.previsionnel }} €</h4>
 
         <div class="table-responsive">
             <p>
-            <div class="btn-group">
-                <button type="button" class="btn btn-outline-info add_mouvement_link"><i class="fa fa-plus"></i> Ajouter
-                    un mouvement
-                </button>
-            </div>
+            {{ render(controller('App\\Controller\\MouvementController::new', {'id': compte.id})) }}
 
-            <div class="btn-group">
-                <button id="save" type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Enregistrer</button>
-            </div>
-            <table class="table table-bordered table-sm margin" id="mouvements-new">
-                <thead class="thead d-none">
-                <tr>
-                    <th class="text-center">{{ 'treated'|trans }}</th>
-                    <th class="text-center">{{ 'title'|trans }}</th>
-                    <th class="text-center">{{ 'date'|trans }}</th>
-                    <th class="text-center">{{ 'credit'|trans }}</th>
-                    <th class="text-center">{{ 'debit'|trans }}</th>
-                    <th class="text-center">{{ 'actions'|trans }}</th>
-                </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-            </p>
             <table class="table table-bordered table-sm">
                 <thead class="thead-light">
-                <tr>
-                    <th class="text-center">{{ 'treated'|trans }}</th>
-                    <th class="text-center">{{ 'title'|trans }}</th>
-                    <th class="text-center">{{ 'date'|trans }}</th>
-                    <th class="text-center">{{ 'credit'|trans }}</th>
-                    <th class="text-center">{{ 'debit'|trans }}</th>
-                    <th class="text-center">{{ 'actions'|trans }}</th>
-                </tr>
+                    <tr class="d-flex">
+                        <th class="col-1 text-center">{{ 'treated'|trans }}</th>
+                        <th class="col-4 text-center">{{ 'title'|trans }}</th>
+                        <th class="col-2 text-center">{{ 'date'|trans }}</th>
+                        <th class="col-2 text-center">{{ 'credit'|trans }}</th>
+                        <th class="col-2 text-center">{{ 'debit'|trans }}</th>
+                        <th class="col-1 text-center">{{ 'actions'|trans }}</th>
+                    </tr>
                 </thead>
                 <tbody>
-                {% for mouvement in form.mouvements %}
-                    <tr class="mouvements" data-prototype="{{ form_widget(form.mouvements.vars.prototype)|e }}">
-                        <td class="text-center">{{ form_widget(mouvement.traite) }}</td>
-                        <td class="text-center">{{ form_widget(mouvement.libelle) }}</td>
-                        <td class="text-center">{{ form_widget(mouvement.date) }}</td>
-                        <td class="text-center">{{ form_widget(mouvement.credit) }}</td>
-                        <td class="text-center">{{ form_widget(mouvement.debit) }}</td>
-                        <td class="text-center mouvement-delete">
-                            <a href="#"><i class="fa fa-trash-alt"></i></a>
+                {% for mouvement in pagination %}
+                    <tr class="d-flex mouvements">
+                        <td class="col-1 text-center">{% if mouvement.traite == 1 %}Oui{% else %}Non{% endif %}</td>
+                        <td class="col-4">{{ mouvement.libelle }}</td>
+                        <td class="col-2 text-center">{{ mouvement.date|date("d/m/Y") }}</td>
+                        <td class="col-2 text-center">{{ mouvement.credit }}</td>
+                        <td class="col-2 text-center">{{ mouvement.debit }}</td>
+                        <td class="col-1 text-center">
+                            <span class="mouvement-update"><a href="{{ path('mouvement_update', { 'id': mouvement.id }) }}"><i class="fa fa-edit"></i></a></span>
+                            <span class="mouvement-delete"><a href="{{ path('mouvement_delete', { 'id': mouvement.id }) }}"><i class="fa fa-trash-alt"></i></a></span>
                         </td>
                     </tr>
                 {% else %}
@@ -82,10 +46,11 @@
                 {% endfor %}
                 </tbody>
             </table>
-        </div>
 
-        {{ form_rest(form) }}
-        {{ form_end(form) }}
+            <div class="panel-footer">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
     </main>
 
     <script type="text/javascript">
@@ -94,32 +59,41 @@
         const $addMouvementButton = $('.add_mouvement_link');
 
         $(document).ready(function () {
+            // On masque le bouton Enregistrer si pas de nouveau mouvement
+            $('#save').hide();
+
             // Récupération des tr qui vont contenir les nouveaux mouvements
-            $collectionHolder = $('tr.mouvements');
+            $collectionHolder = $('div.mouvements');
 
             // Compter les entrées de formulaire actuelles, utilisez-les comme nouveaux
             // index lors de l'insertion d'un nouvel élément
-            $collectionHolder.data('index', $collectionHolder.find(':input').length);
+            $collectionHolder.data('index',  $('#count').val());
 
             // Sur le clic du bouton nouveau mouvement
-            $addMouvementButton.on('click', function (e) {
+            $addMouvementButton.on('click', function () {
+                // On affiche le bouton Enregistrer si pas de nouveau mouvement
+                $('#save').show();
+
                 // On ajoute un nouveau mouvement
                 addMouvementForm($collectionHolder);
             });
 
             // Suppression de mouvements existants sur le clic de la corbeille
-            $('.mouvement-delete').on('click', function (e) {
+            $('.mouvement-delete').on('click', function () {
                 $(this).parent().remove();
             });
 
             // Suppression des nouveaux mouvements
-            $('#mouvements-new').on('click', 'td', function (e) {
+            $('#mouvements-new').on('click', 'td', function () {
                 if ($(this).hasClass('mouvement-delete')) {
                     // On supprime le nouveau mouvement du formulaire
                     $(this).parent().remove();
 
                     // Si aucun nouveau mouvement
                     if ($('#mouvements-new tr').length - 1 === 0) {
+                        // On masque le bouton Enregistrer si pas de nouveau mouvement
+                        $('#save').hide();
+
                         // On masque l'en-tête du tableau
                         $('.thead').addClass('d-none');
                     }

@@ -44,8 +44,7 @@ class Compte
     private $ordre;
 
     /**
-     * @ORM\OneToMany(targetEntity="Mouvement", mappedBy="compte", cascade={"persist"}, orphanRemoval=true)
-     * @ORM\JoinColumn(nullable=true)
+     * @ORM\OneToMany(targetEntity="Mouvement", mappedBy="compte", cascade={"persist"})
      * @ORM\OrderBy({"date" = "DESC"})
      */
     private $mouvements;

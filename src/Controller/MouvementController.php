@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class CompteController
+ * Class MouvementController
  * @package App\Controller
  *
  *  @Route("/mouvement")
@@ -39,8 +39,6 @@ class MouvementController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em->flush();
-
-            $this->addFlash('success', 'compte_success_edit');
 
             return $this->redirectToRoute('compte_edit', ['id' => $compte->getId()]);
         }
@@ -67,8 +65,6 @@ class MouvementController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->getDoctrine()->getManager()->flush();
-
-            $this->addFlash('success', 'mouvement_success_edit');
 
             return $this->redirectToRoute('compte_edit', ['id' => $compte]);
         }

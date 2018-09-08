@@ -27,6 +27,9 @@
                                     {{ 'dashboard'|trans }} <span class="sr-only">(current)</span>
                                 </a>
                             </li>
+                        </ul>
+                        <hr>
+                        <ul class="nav flex-column">
                             {% for compte in comptes() %}
                                 <li class="nav-item">
                                     <a class="nav-link {% if 'compte/' ~ compte.id in app.request.pathinfo %}active{% endif %}"  href="{{ path('compte_edit', {id: compte.id, page: 1}) }}">
@@ -36,6 +39,16 @@
                                 </li>
                             {% endfor%}
                         </ul>
+                        <hr>
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link {% if 'Automatique' in app.request.get('_controller') %}active{% endif %}" href="{{ path('mouvement_automatique_index') }}">
+                                    <i class="fa fa-euro-sign"></i>
+                                    {{ 'common_fees'|trans }} <span class="sr-only">(current)</span>
+                                </a>
+                            </li>
+                        </ul>
+                        <hr>
                     </div>
                 </nav>
             </div>

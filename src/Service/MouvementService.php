@@ -149,6 +149,19 @@ class MouvementService
     }
 
     /**
+     * Retourne le montant des frais commun sur le mois
+     *
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getMonthlyCommonFees()
+    {
+        $result = $this->em->getRepository('App:MouvementAutomatique')->findMonthlyCommonFees();
+
+        return $result / 2;
+    }
+
+    /**
      * Enregistre un mouvement
      *
      * @param $mouvement

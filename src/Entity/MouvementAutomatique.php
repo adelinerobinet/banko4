@@ -57,6 +57,13 @@ class MouvementAutomatique
     private $debit;
 
     /**
+     * @var bool|null
+     *
+     * @ORM\Column(name="commun", type="boolean", nullable=false)
+     */
+    private $commun;
+
+    /**
      * @var Compte
      *
      * @ORM\ManyToOne(targetEntity="Compte")
@@ -165,6 +172,29 @@ class MouvementAutomatique
     public function setDebit(string $debit): self
     {
         $this->debit = $debit;
+
+        return $this;
+    }
+
+    /**
+     * Get commun
+     *
+     * @return bool|null
+     */
+    public function getCommun(): ?bool
+    {
+        return $this->commun;
+    }
+
+    /**
+     * Set commun
+     *
+     * @param bool|null $commun
+     * @return $this
+     */
+    public function setCommun(?bool $commun): self
+    {
+        $this->commun = $commun;
 
         return $this;
     }

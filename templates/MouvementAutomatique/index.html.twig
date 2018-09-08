@@ -1,0 +1,101 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    {{ 'monthly_common_fees'|trans }}
+{% endblock %}
+
+{% block body %}
+    <main role="main" class="col-md-10 ml-sm-auto col-lg-10 px-4">
+        <br>
+        <h1>{{ 'monthly_common_fees'|trans }}</h1>
+        <label for="init-montant"></label><input type="hidden" id="init-montant" value="{{ amount }}">
+        <h4 class="float-left text-success">{{ 'amount_month'|trans }} : <span id="montant">{{ amount }}</span> €</h4>
+
+        <div id="main" class="table-responsive">
+            <table class="table table-bordered table-sm">
+                <thead class="thead-light">
+                <tr class="d-flex">
+                    <th class="col-4 text-center">{{ 'title'|trans }}</th>
+                    <th class="col-2 text-center">{{ 'credit'|trans }}</th>
+                    <th class="col-2 text-center">{{ 'debit'|trans }}</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for mouvement_automatique in all %}
+                    <tr class="d-flex mouvements" data-id="{{ mouvement_automatique.id }}">
+                        <td class="col-4 {% if mouvement_automatique.debit == 0 %}text-white bg-info{% endif %}">{{ mouvement_automatique.libelle }}</td>
+                        <td class="col-2">
+                            <label for="credit"></label>
+                            <input id="credit" class="text-center" type="text" value="{{ mouvement_automatique.credit }}">
+                        </td>
+                        <td class="col-2">
+                            <label for="debit"></label>
+                            <input id="debit" class="text-center" type="text" value="{{ mouvement_automatique.debit }}">
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>Pas (encore !) de mouvement automatique</tr>
+                {% endfor %}
+                <label for="nounou-init"></label><input type="hidden" id="nounou-init" value="670">
+                <tr class="d-flex mouvements" data-id="nounou">
+                    <td class="text-white col-4 bg-warning">{{ 'nanny'|trans }}</td>
+                    <td class="col-2">
+                        <label for="nounou-credit"></label>
+                        <input id="nounou-credit" class="text-center" type="text" value="0">
+                    </td>
+                    <td class="col-2">
+                        <label for="nounou-debit"></label>
+                        <input id="nounou-debit" class="text-center" type="text" value="670"></td>
+                </tr>
+                </tbody>
+            </table>
+
+            <fieldset class="border p-2">
+                <legend  class="w-auto">Légende</legend>
+                <p class="help-block">
+                    <span class="bg-default">Débit fixe</span>
+                    <span class="text-white bg-info">Crédit fixe</span>
+                    <span class="text-white bg-warning">Débit variable</span>
+                </p>
+            </fieldset>
+        </div>
+    </main>
+
+    <script type="text/javascript">
+        /**
+         * Retourne le montant commun avec le calcul de la nounou init
+         *
+         * @param init
+         */
+        function getAmount(init) {
+            let $montant = 0;
+
+            if (init) {
+                $montant = parseFloat($('#nounou-init').val() / 2) + parseFloat($('#init-montant').val());
+            } else {
+                // Formatage du montant si virgule
+                const $value = $('#nounou-debit').val().replace(",", ".");
+                $('#nounou-debit').val($value);
+
+                $montant = parseFloat($value / 2) + parseFloat($('#init-montant').val());
+            }
+            $('#montant').html($montant.toFixed(2));
+        }
+
+        $(document).ready(function () {
+            // Prendre en compte le montant de la nounou pour les frais commun
+            getAmount(true);
+
+            $("#nounou-debit").change(function () {
+                getAmount();
+            });
+
+            // Sur le changement du montant de la nounou
+            $(document).on('keydown', '#nounou-debit', function() {
+                if (event.key === 'Enter') {
+                    getAmount(false);
+                }
+            });
+        });
+    </script>
+{% endblock %}

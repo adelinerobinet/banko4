@@ -25,3 +25,9 @@ current: Courant
 forecast: Prévisionnel
 compte_success_edit: Le compte a été modifié
 compte_error_edit: Le compte n'a pas pu être modifié
+
+# Monthly common fees
+monthly_common_fees: Frais communs
+amount_month: Montant pour le mois
+common_fees: Frais communs
+nanny: Nounou

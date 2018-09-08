@@ -39,5 +39,21 @@ class MouvementAutomatiqueRepository extends ServiceEntityRepository
             ->andWhere('ma.actif = 1');
 
         return $qb->getQuery()->getArrayResult();
-    }  
+    }
+
+    /**
+     * Retourne le montant des frais commun
+     *
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findMonthlyCommonFees()
+    {
+        $qb = $this->_em->createQueryBuilder()
+            ->select('SUM(ma.debit) - SUM(ma.credit)')
+            ->from('App:MouvementAutomatique', 'ma')
+            ->where('ma.commun = true');
+
+        return floatval($qb->getQuery()->getSingleScalarResult());
+    }
 }

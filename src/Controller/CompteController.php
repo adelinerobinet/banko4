@@ -38,6 +38,8 @@ class CompteController extends Controller
         MouvementService $mouvementService,
         PaginatorInterface $paginator
     ) {
+        ini_set('memory_limit', '-1');
+
         // Appel du traitement de l'ajout des prelevements automatiques du mois en cours pour le compte à afficher
         $mouvementService->ajoutPrelevementAutomatique($compte);
 

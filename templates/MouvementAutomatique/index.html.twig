@@ -15,20 +15,20 @@
             <table class="table table-bordered table-sm">
                 <thead class="thead-light">
                 <tr class="d-flex">
-                    <th class="col-4 text-center">{{ 'title'|trans }}</th>
-                    <th class="col-2 text-center">{{ 'credit'|trans }}</th>
-                    <th class="col-2 text-center">{{ 'debit'|trans }}</th>
+                    <th class="col-6 text-center">{{ 'title'|trans }}</th>
+                    <th class="col-3 text-center">{{ 'credit'|trans }}</th>
+                    <th class="col-3 text-center">{{ 'debit'|trans }}</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for mouvement_automatique in all %}
                     <tr class="d-flex mouvements" data-id="{{ mouvement_automatique.id }}">
-                        <td class="col-4 {% if mouvement_automatique.debit == 0 %}text-white bg-info{% endif %}">{{ mouvement_automatique.libelle }}</td>
-                        <td class="col-2">
+                        <td class="col-6 {% if mouvement_automatique.debit == 0 %}text-white bg-info{% endif %}">{{ mouvement_automatique.libelle }}</td>
+                        <td class="col-3">
                             <label for="credit"></label>
                             <input id="credit" class="text-center" type="text" value="{{ mouvement_automatique.credit }}">
                         </td>
-                        <td class="col-2">
+                        <td class="col-3">
                             <label for="debit"></label>
                             <input id="debit" class="text-center" type="text" value="{{ mouvement_automatique.debit }}">
                         </td>
@@ -38,12 +38,12 @@
                 {% endfor %}
                 <label for="nounou-init"></label><input type="hidden" id="nounou-init" value="670">
                 <tr class="d-flex mouvements" data-id="nounou">
-                    <td class="text-white col-4 bg-warning">{{ 'nanny'|trans }}</td>
-                    <td class="col-2">
+                    <td class="text-white col-6 bg-warning">{{ 'nanny'|trans }}</td>
+                    <td class="col-3">
                         <label for="nounou-credit"></label>
                         <input id="nounou-credit" class="text-center" type="text" value="0">
                     </td>
-                    <td class="col-2">
+                    <td class="col-3">
                         <label for="nounou-debit"></label>
                         <input id="nounou-debit" class="text-center" type="text" value="670"></td>
                 </tr>

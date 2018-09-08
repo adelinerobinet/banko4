@@ -24,14 +24,8 @@
                 {% for mouvement_automatique in all %}
                     <tr class="d-flex mouvements" data-id="{{ mouvement_automatique.id }}">
                         <td class="col-6 {% if mouvement_automatique.debit == 0 %}text-white bg-info{% endif %}">{{ mouvement_automatique.libelle }}</td>
-                        <td class="col-3">
-                            <label for="credit"></label>
-                            <input id="credit" class="text-center" type="text" value="{{ mouvement_automatique.credit }}">
-                        </td>
-                        <td class="col-3">
-                            <label for="debit"></label>
-                            <input id="debit" class="text-center" type="text" value="{{ mouvement_automatique.debit }}">
-                        </td>
+                        <td class="col-3 text-center">{{ mouvement_automatique.credit }}</td>
+                        <td class="col-3 text-center">{{ mouvement_automatique.debit }}</td>
                     </tr>
                 {% else %}
                     <tr>Pas (encore !) de mouvement automatique</tr>

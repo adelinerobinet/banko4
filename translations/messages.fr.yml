@@ -31,3 +31,12 @@ monthly_common_fees: Frais communs
 amount_month: Montant pour le mois
 common_fees: Frais communs
 nanny: Nounou
+salary: Salaire
+nanny_salary: Salaire Nounou
+count_wednesdays: Nombre de mercredi
+count_full_days: Nombre de jours entier
+total_days: Nombre de jours total
+count_normal_hours: Nombre d'heures normale
+maintenance: Entretien
+meal: Repas
+calculate: Calculer

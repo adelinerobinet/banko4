@@ -42,6 +42,15 @@
                         <hr>
                         <ul class="nav flex-column">
                             <li class="nav-item">
+                                <a class="nav-link {% if 'Nounou' in app.request.get('_controller') %}active{% endif %}" href="{{ path('nounou_index') }}">
+                                    <i class="fa fa-user"></i>
+                                    {{ 'nanny_salary'|trans }} <span class="sr-only">(current)</span>
+                                </a>
+                            </li>
+                        </ul>
+                        <hr>
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
                                 <a class="nav-link {% if 'Automatique' in app.request.get('_controller') %}active{% endif %}" href="{{ path('mouvement_automatique_index') }}">
                                     <i class="fa fa-euro-sign"></i>
                                     {{ 'common_fees'|trans }} <span class="sr-only">(current)</span>

@@ -15,11 +15,11 @@
             <div class="form-row">
                 <div class="form-group col-md-4">
                     <label for="entretien_mercredi">{{ 'count_wednesdays'|trans }}</label>
-                    <input type="text" class="form-control" id="entretien_mercredi" value="0" data-prix="2.65" data-heures="4">
+                    <input type="text" class="form-control" id="entretien_mercredi" value="0" data-prix="2.65" data-minutes="240">
                 </div>
                 <div class="form-group col-md-4">
                     <label for="entretien_normal">{{ 'count_full_days'|trans }}</label>
-                    <input type="text" class="form-control" id="entretien_normal" value="0" data-prix="3.37" data-heures="9,75">
+                    <input type="text" class="form-control" id="entretien_normal" value="0" data-prix="3.37" data-minutes="615">
                 </div>
                 <div class="form-group col-md-4">
                     <label for="nb-jours">{{ 'total_days'|trans }}</label>
@@ -35,7 +35,7 @@
             <div class="form-row">
                 <div class="form-group col-md-4">
                     <label for="salaire"><strong>{{ 'salary'|trans }}</strong></label>
-                    <span type="text" class="form-control text-white bg-success" id="salaire">604.50</span>
+                    <span type="text" class="form-control text-white bg-success" id="salaire">612.30</span>
                 </div>
             </div>
             <div class="form-row">
@@ -47,7 +47,7 @@
             <div class="form-row">
                 <div class="form-group col-md-4">
                     <label for="repas"><strong>{{ 'meal'|trans }}</strong></label>
-                    <span type="text" class="form-control text-white bg-success" id="repas" data-prix="3.20">0</span>
+                    <span type="text" class="form-control text-white bg-secondary" id="repas" data-prix="3.20">0</span>
                 </div>
             </div>
             <button type="submit" id="calculer" class="btn btn-info">{{ 'calculate'|trans }}</button>
@@ -61,14 +61,21 @@
             $prixMercredi = parseFloat($('#entretien_mercredi').data('prix'));
             $prixNormal = parseFloat($('#entretien_normal').data('prix'));
             $prixRepas = parseFloat($('#repas').data('prix'));
-            $heuresMercredi = parseFloat($('#entretien_mercredi').data('heures'));
-            $heuresNormal = parseFloat($('#entretien_normal').data('heures'));
+            $minutesMercredi = parseFloat($('#entretien_mercredi').data('minutes'));
+            $minutesNormal = parseFloat($('#entretien_normal').data('minutes'));
 
             // Sur le changement du nombre de jour d'entretien
             $(document).on('change', '#entretien_mercredi, #entretien_normal', function() {
-                // On calcul le nombre d'heures normales
-                $heuresTotal = $heuresMercredi * parseFloat($('#entretien_mercredi').val()) + $heuresNormal * parseFloat($('#entretien_normal').val());
-                $('#heures').html($heuresTotal);
+                // On calcul le nombre total de minutes
+                $minutesMercrediTotal = $minutesMercredi * $('#entretien_mercredi').val();
+                $minutesNormalTotal = $minutesNormal * $('#entretien_normal').val();
+                $minutesTotal = $minutesMercrediTotal + $minutesNormalTotal;          
+                
+                // Calcul le nombre d'heures total
+                $hours = ($minutesTotal / 60);
+                $rhours = Math.floor($hours);
+                $minutes = ($hours - $rhours) * 60;
+                $('#heures').html($rhours + ' H ' + $minutes);
 
                 // On calcul le nombre total de jours
                 $nbJours = parseInt($('#entretien_mercredi').val()) + parseInt($('#entretien_normal').val()); 
@@ -94,7 +101,7 @@
                 $salaire = parseFloat($('#salaire').html());
                 
                 $total = parseFloat($entretien + $repas + $salaire);
-                
+                $total = $total.toFixed(2);
                 $('#montant').html($total);
             });
             

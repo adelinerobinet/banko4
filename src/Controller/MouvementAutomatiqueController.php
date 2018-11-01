@@ -27,7 +27,7 @@ class MouvementAutomatiqueController extends Controller
      */
     public function index(MouvementService $mouvementService, EntityManagerInterface $em) {
         $all = $em->getRepository('App:MouvementAutomatique')->findBy(
-            ['commun' => true],
+            ['commun' => true, 'actif' => true],
             ['numeroJour' => 'ASC']
         );
 

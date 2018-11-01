@@ -52,7 +52,8 @@ class MouvementAutomatiqueRepository extends ServiceEntityRepository
         $qb = $this->_em->createQueryBuilder()
             ->select('SUM(ma.debit) - SUM(ma.credit)')
             ->from('App:MouvementAutomatique', 'ma')
-            ->where('ma.commun = true');
+            ->where('ma.commun = true')
+	    ->andWhere('ma.actif = true');
 
         return floatval($qb->getQuery()->getSingleScalarResult());
     }

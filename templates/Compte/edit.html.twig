@@ -137,7 +137,7 @@
             const prototype = $collectionHolder.data('prototype');
 
             // Récupération du nouvel index
-            const index = $collectionHolder.data('index');
+            let index = parseInt($collectionHolder.data('index'));
 
             // Récupération du prototype pour le modifier ensuite
             let newForm = prototype;
@@ -152,11 +152,11 @@
             $('#mouvements-new tbody').append(newForm);
 
             // Affichage par défaut des valeurs
-            const date = new Date().toISOString().slice(0, 10);
             const title = 'Divers';
+            const date = new Date().toISOString().slice(0, 10);
 
-            $('#mouvements-new input[type=date]').val(date);
-            $('#mouvements-new td [id$="_libelle"]').val(title);
+            $("#mouvements-new td [id$=" + index + "_libelle]").val(title);
+            $("#mouvements-new td [id$=" + index + "_date]").val(date);
         }
     </script>
 {% endblock %}

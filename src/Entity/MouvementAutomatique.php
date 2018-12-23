@@ -3,12 +3,14 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 /**
  * MouvementAutomatique
  *
  * @ORM\Table(name="mouvement_automatique", indexes={@ORM\Index(name="IDX_9646EA2DF2C56620", columns={"compte_id"})})
  * @ORM\Entity(repositoryClass="App\Repository\MouvementAutomatiqueRepository")
+ * @ApiResource
  */
 class MouvementAutomatique
 {

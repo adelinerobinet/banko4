@@ -23,4 +23,5 @@ yarn-error.log
 
 /nbproject/
 /.idea/
+/nbproject
 .DS_Store

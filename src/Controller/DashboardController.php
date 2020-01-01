@@ -27,7 +27,8 @@ class DashboardController extends Controller
     {
         // Mais pour l'instant, on ne fait qu'appeler le template
         return $this->render('Dashboard/index.html.twig', [
-            'comptes' => $compteService->getAllAsArray()
+            'comptes' => $compteService->getAllAsArray(),
+            'total' => $compteService->getTotal()
         ]);
     }
 

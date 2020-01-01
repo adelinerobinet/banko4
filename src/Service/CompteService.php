@@ -56,6 +56,19 @@ class CompteService
     }
 
     /**
+     * Retourne le solde courant total
+     *
+     * @param integer $id : Id du compte
+     * @return array
+     */
+    public function getTotal()
+    {
+        return array_sum(array_map(function($item) { 
+            return $item['solde_courant']; 
+        }, $this->getAllAsArray()));
+    }
+
+    /**
      * Retourne tous les comptes avec le solde courant et le solde prévisionnel
      *
      * @return array

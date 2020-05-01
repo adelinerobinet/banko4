@@ -21,6 +21,12 @@ yarn-error.log
 /.web-server-pid
 ###< symfony/web-server-bundle ###
 
+###> docker ###
+.docker/data
+.docker/config/ssl
+.docker-sync
+###< docker ###
+
 /nbproject/
 /.idea/
 /nbproject

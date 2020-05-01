@@ -1,0 +1,48 @@
+version: '3'
+services:
+    apache:
+        build: .docker/apache
+        container_name: banko4_apache
+        ports:
+            - 80:80
+            - 443:443
+        volumes:
+            - .docker/config/vhosts:/etc/apache2/sites-enabled
+            - app-sync:/var/www/html/banko4
+            - .docker/config/ssl/server.key:/etc/apache2/server.key
+            - .docker/config/ssl/server.crt:/etc/apache2/server.crt
+        depends_on:
+            - php
+        environment:
+            TZ: Europe/Paris
+
+    mysql:
+        image: mysql:5.7
+        command:
+            - "--default-authentication-plugin=mysql_native_password"
+            - "--lower_case_table_names=1"
+        container_name: banko4_mysql
+        volumes:
+            - .docker/data/db:/var/lib/mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: banko4
+            MYSQL_USER: banko4
+            MYSQL_PASSWORD: banko4
+            TZ: Europe/Paris
+        ports:
+            - 3306:3306
+
+    php:
+        build: .docker/php
+        container_name: banko4_php
+        volumes:
+            - app-sync:/var/www/html/banko4
+        depends_on:
+            - mysql
+        environment:
+            TZ: Europe/Paris
+
+volumes:
+    app-sync:
+        external: true

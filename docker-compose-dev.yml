@@ -8,7 +8,7 @@ services:
             - 443:443
         volumes:
             - .docker/config/vhosts:/etc/apache2/sites-enabled
-            - app-sync:/var/www/html/banko4
+            - app-sync-banko4:/var/www/html/banko4
             - .docker/config/ssl/server.key:/etc/apache2/server.key
             - .docker/config/ssl/server.crt:/etc/apache2/server.crt
         depends_on:
@@ -37,12 +37,12 @@ services:
         build: .docker/php
         container_name: banko4_php
         volumes:
-            - app-sync:/var/www/html/banko4
+            - app-sync-banko4:/var/www/html/banko4
         depends_on:
             - mysql
         environment:
             TZ: Europe/Paris
 
 volumes:
-    app-sync:
+    app-sync-banko4:
         external: true

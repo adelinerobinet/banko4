@@ -23,7 +23,6 @@ yarn-error.log
 
 ###> docker ###
 .docker/data
-.docker/config/ssl
 .docker-sync
 ###< docker ###
 

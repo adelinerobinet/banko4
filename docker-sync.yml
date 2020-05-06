@@ -5,7 +5,7 @@ options:
     compose-dev-file-path: 'docker-compose-dev.yml'
 
 syncs:
-    app-sync:
+    app-sync-banko4:
         src: '.'
         sync_strategy: 'unison'
         sync_excludes: ['vendor', 'node_modules', '.gitignore', '.git', 'var/cache', 'var/log', '.idea', '.docker-sync']

@@ -22,16 +22,16 @@ help:
 ## Adeline
 OS := $(shell uname)
 
-start_dev:
+dev_start:
 ifeq ($(OS),Darwin)
-	docker volume create --name=app-sync
+	docker volume create --name=app-sync-banko4
 	docker-compose -f docker-compose-dev.yml up -d
 	docker-sync start
 else
 	docker-compose up -d
 endif
 
-stop_dev:
+dev_stop:
 ifeq ($(OS),Darwin)
 	docker-compose stop
 	docker-sync stop
@@ -39,12 +39,5 @@ else
 	docker-compose stop
 endif
 
-php_bash:
+dev_bash:
 	docker exec -it -u root banko4_php bash
-
-## Pierre
-start:
-	docker-compose up -d
-
-stop:
-	docker-compose stop

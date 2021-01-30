@@ -1,9 +1,9 @@
 {
   "build/js/app.js": "/build/js/app.js",
   "build/css/app.css": "/build/css/app.css",
-  "build/fonts/fa-solid-900.woff2": "/build/fonts/fa-solid-900.18d2347a.woff2",
   "build/fonts/fa-solid-900.eot": "/build/fonts/fa-solid-900.d9824d00.eot",
+  "build/images/fa-solid-900.svg": "/build/images/fa-solid-900.666a82cb.svg",
   "build/fonts/fa-solid-900.ttf": "/build/fonts/fa-solid-900.00ddaede.ttf",
   "build/fonts/fa-solid-900.woff": "/build/fonts/fa-solid-900.128d2b0b.woff",
-  "build/images/fa-solid-900.svg": "/build/images/fa-solid-900.666a82cb.svg"
+  "build/fonts/fa-solid-900.woff2": "/build/fonts/fa-solid-900.18d2347a.woff2"
 }
